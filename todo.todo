@@ -7,6 +7,14 @@ General:
     ✔ Select data to extract @done(25-06-10 17:43)
 
 Post Data Extraction:
-    ☐ Check if contribution within todays date
+    ✔ Check if contribution within todays date @done(25-06-12 15:18)
     ☐ Decide whether to increment streak or not
     ☐ Notify me/user of streak increment or risk of ending streak
+
+☐ Have a check at 6pm to see if there is a contrib and send an update.
+☐ Then have another check at 11.59pm to see if there has been a contrib.
+☐ Check at 6pm only updates the user as to if they have made a contrib. Check at 11.59pm performs the streak increment
+
+Automation Setup:
+    ☐ Use smtplib for sending emails
+    ☐ Use github actions cron job for scheduling to run daily
