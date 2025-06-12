@@ -1,0 +1,12 @@
+GitHub access:
+    ☐ Connect to GraphQL API
+    ☐ Extract data from GraphQL API
+
+General:
+    ✔ Select endpoint to hit @done(25-06-10 17:43)
+    ✔ Select data to extract @done(25-06-10 17:43)
+
+Post Data Extraction:
+    ☐ Check if contribution within todays date
+    ☐ Decide whether to increment streak or not
+    ☐ Notify me/user of streak increment or risk of ending streak
