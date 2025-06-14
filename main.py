@@ -1,4 +1,4 @@
-import datetime, os, requests, dotenv
+import datetime, os, requests, dotenv, time
 
 dotenv.load_dotenv()
 
@@ -25,7 +25,7 @@ query($username: String!, $from: DateTime!, $to: DateTime!) {
 # it would be counted towards the contrib for the day
 variables = {
     "username": GITHUB_USERNAME,
-    "from": (datetime.datetime.now() - datetime.timedelta(days=1)).isoformat(),
+    "from": datetime.datetime.now().replace(hour=0, minute=0,second=0, microsecond=0).isoformat(),
     "to": datetime.datetime.now().isoformat()
 }
 
@@ -43,7 +43,6 @@ def get_contributions():
     else:
         try:
             total = response_data['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions']
-            print("Total contributions:", total)
             return total
         except KeyError as e:
             print(f"Missing expected key in response: {e}")
@@ -79,8 +78,10 @@ def end_of_day_check():
 
 def main():
     # Make a call to the GitHub GraphQL api to retrieve how many contributions were made in the last 24 hours
-    mid_evening_check()
-    end_of_day_check()
+    if datetime.datetime.now().time() <= datetime.time(23):
+        mid_evening_check()
+    else:
+        end_of_day_check()
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,6 @@
 GitHub access:
-    ☐ Connect to GraphQL API
-    ☐ Extract data from GraphQL API
+    ✔ Connect to GraphQL API @done(25-06-14 16:56)
+    ✔ Extract data from GraphQL API @done(25-06-14 16:56)
 
 General:
     ✔ Select endpoint to hit @done(25-06-10 17:43)
