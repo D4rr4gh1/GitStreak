@@ -102,6 +102,7 @@ def update_user_streak(incrementStreak):
 def mid_evening_check():
     count = get_contributions()
     if check_contributions(count):
+        send_user_update(True)
         return
     else:
         send_user_update(True)
