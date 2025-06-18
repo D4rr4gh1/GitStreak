@@ -3,9 +3,7 @@ from email.mime.text import MIMEText
 
 dotenv.load_dotenv()
 
-GITHUB_ACCESS_TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
-GRAPH_QL_ENDPOINT = os.getenv("GRAPH_QL_ENDPOINT")
-GITHUB_USERNAME = os.getenv("GITHUB_USERNAME")
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 USER_EMAIL = os.getenv("USER_EMAIL")
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
@@ -29,30 +27,33 @@ query($username: String!, $from: DateTime!, $to: DateTime!) {
 #TODO: Change time frame to be from 12.00 of the same day. Else if they made a contrib at 11pm the prev night, 
 # it would be counted towards the contrib for the day
 variables = {
-    "username": GITHUB_USERNAME,
+    "username": "D4rr4gh1",
     "from": datetime.datetime.now().replace(hour=0, minute=0,second=0, microsecond=0).isoformat(),
     "to": datetime.datetime.now().isoformat()
 }
 
 firstUpdateMessage = '''
-You have not yet made a contribution for {date}. If you do not make a contribution 
-by 11.59pm, you will lose your {streak} day streak!
+You have not yet made a contribution for {date}. 
+
+If you do not make a contribution by 11.59pm, you will lose your {streak} day streak!
 '''.format(date = DATE, streak = 10)
 
 secondUpdateMessage = '''
-You made at least 1 contribution for {date}. You have now built a {streak} day 
-streak. Keep it up!
+You made at least 1 contribution for {date}. You have now built a {streak} day streak. 
+
+Keep it up!
 '''.format(date = DATE, streak= 10)
 
 EOSUpdateMessage = '''
 You failed to make a contribution for {date}. Your streak has been reset. 
+
 Work hard to built a newer and bigger one!
 '''.format(date = DATE)
 
 def get_contributions():
     response = requests.post(
-        GRAPH_QL_ENDPOINT,
-        headers={"Authorization": f"Bearer {GITHUB_ACCESS_TOKEN}"},
+        "https://api.github.com/graphql",
+        headers={"Authorization": f"Bearer {ACCESS_TOKEN}"},
         json= {"query" : query, "variables" : variables}
     )
     response_data = response.json()
@@ -119,11 +120,10 @@ def end_of_day_check():
 
 def main():
     # Make a call to the GitHub GraphQL api to retrieve how many contributions were made in the last 24 hours
-    # if datetime.datetime.now().time() <= datetime.time(23):
-    #     mid_evening_check()
-    # else:
-    #     end_of_day_check()
-    print(secondUpdateMessage)
+    if datetime.datetime.now().time() <= datetime.time(23):
+        mid_evening_check()
+    else:
+        end_of_day_check()
 
 if __name__ == "__main__":
     main()
