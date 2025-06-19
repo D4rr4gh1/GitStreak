@@ -9,6 +9,7 @@ on:
 jobs:
   run-python:
     runs-on: ubuntu-latest
+    environment: myenvironment
 
     steps:
       - name: Checkout code
