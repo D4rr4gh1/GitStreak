@@ -67,6 +67,7 @@ def get_contributions():
             return total
         except KeyError as e:
             print(f"Missing expected key in response: {e}")
+            print(response_data)
             exit()
 
 def check_contributions(count):
