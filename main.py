@@ -1,7 +1,7 @@
 import datetime, os, requests, dotenv, smtplib
 from email.mime.text import MIMEText
 
-dotenv.load_dotenv()
+# dotenv.load_dotenv()
 
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 USER_EMAIL = os.getenv("USER_EMAIL")
