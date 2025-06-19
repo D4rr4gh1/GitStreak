@@ -9,7 +9,7 @@ on:
 jobs:
   run-python:
     runs-on: ubuntu-latest
-    environment: myenvironment
+    environment: UserDetails
 
     steps:
       - name: Checkout code
