@@ -64,11 +64,10 @@ def get_contributions():
     else:
         try:
             total = response_data['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions']
+            print(response_data['data'])
             return total
         except KeyError as e:
             print(f"Missing expected key in response: {e}")
-            print(f"Response data is {response_data}")
-            print(f"Token is {ACCESS_TOKEN}")
             exit()
 
 def check_contributions(count):
