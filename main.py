@@ -45,13 +45,13 @@ WarningMessage = '''
 You have not yet made a contribution for {date}. 
 
 If you do not make a contribution by 11.59pm, you will lose your {streak} day streak!
-'''.format(date = DATE_TODAY, streak = 10)
+'''.format(date = DATE_TODAY, streak = STREAK)
 
 UpdateMessage = '''
 You made at least 1 contribution for {date}. You have now built a {streak} day streak. 
 
 Keep it up!
-'''.format(date = DATE_YESTERDAY, streak= 10)
+'''.format(date = DATE_YESTERDAY, streak= STREAK)
 
 EOSMessage = '''
 You failed to make a contribution for {date}. Your streak has been reset. 
