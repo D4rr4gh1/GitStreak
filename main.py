@@ -7,6 +7,7 @@ ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 USER_EMAIL = os.getenv("USER_EMAIL")
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
+STREAK = os.getenv("STREAK")
 DATE_TODAY = datetime.date.today().strftime("%A, %B %d, %Y")
 DATE_YESTERDAY = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%A, %B %d, %Y")
 
@@ -140,10 +141,11 @@ def yesterday_check():
 
 def main():
     # Decide which check to call based on the time in which the script has been called.
-    if datetime.datetime.now().time() <= datetime.time(17):
-        yesterday_check()
-    else:
-        six_pm_check()
+    # if datetime.datetime.now().time() <= datetime.time(17):
+    #     yesterday_check()
+    # else:
+    #     six_pm_check()
+    print(f"Streak is {STREAK}")
 
 
 if __name__ == "__main__":
