@@ -12,9 +12,6 @@ jobs:
     environment: UserDetails
 
     steps:
-      - name: Prepare Env file
-        run: echo "STREAK=${{ vars.STREAK }}" >> $GITHUB_ENV
-
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -33,10 +30,13 @@ jobs:
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
           SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          STREAK: ${{ vars.STREAK }}
         run: |
           python main.py
 
-      - name: Test Update
+      - name: Commit updated streak.txt
         run: |
-          echo "Streak is: $STREAK"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add streak.txt
+          git commit -m "Update streak value" || echo "No changes to commit"
+          git push

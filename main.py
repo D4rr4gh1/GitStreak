@@ -7,10 +7,13 @@ ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 USER_EMAIL = os.getenv("USER_EMAIL")
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
-STREAK = os.getenv("STREAK")
-ENV_FILE = os.getenv('GITHUB_ENV')
 DATE_TODAY = datetime.date.today().strftime("%A, %B %d, %Y")
 DATE_YESTERDAY = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%A, %B %d, %Y")
+
+STREAK = None
+
+with open("streak.txt", 'r') as file:
+    STREAK = int(file.read().strip())
     
 
 query = """
@@ -146,9 +149,9 @@ def main():
     #     yesterday_check()
     # else:
     #     six_pm_check()
-    with open(ENV_FILE, "a") as file:
+    with open("streak.txt", "w") as file:
         print("WRTITING")
-        file.write("STREAK=13")
+        file.write(str(13))
     
     print(f"Streak is {STREAK}")
 
