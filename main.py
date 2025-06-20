@@ -8,9 +8,10 @@ USER_EMAIL = os.getenv("USER_EMAIL")
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
 STREAK = os.getenv("STREAK")
+ENV_FILE = os.getenv('GITHUB_ENV')
 DATE_TODAY = datetime.date.today().strftime("%A, %B %d, %Y")
 DATE_YESTERDAY = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%A, %B %d, %Y")
-
+    
 
 query = """
 query($username: String!, $from: DateTime!, $to: DateTime!) {
@@ -145,7 +146,11 @@ def main():
     #     yesterday_check()
     # else:
     #     six_pm_check()
-    os.environ["STREAK"] = "13"
+    with open(ENV_FILE, "r") as file:
+        print("Reading")
+        print(file.read())
+        # file.write("STREAK=13")
+    
     print(f"Streak is {STREAK}")
 
 

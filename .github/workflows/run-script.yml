@@ -12,6 +12,9 @@ jobs:
     environment: UserDetails
 
     steps:
+      - name: Prepare Env file
+        run: echo "STREAK=${{ vars.STREAK }}" >> $GITHUB_ENV
+
       - name: Checkout code
         uses: actions/checkout@v3
 
