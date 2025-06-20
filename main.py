@@ -7,9 +7,8 @@ ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 USER_EMAIL = os.getenv("USER_EMAIL")
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
-DATE = datetime.date.today().strftime("%A, %B %d, %Y")
-
-
+DATE_TODAY = datetime.date.today().strftime("%A, %B %d, %Y")
+DATE_YESTERDAY = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%A, %B %d, %Y")
 
 
 query = """
@@ -23,38 +22,45 @@ query($username: String!, $from: DateTime!, $to: DateTime!) {
   }
 }
 """
-
-#TODO: Change time frame to be from 12.00 of the same day. Else if they made a contrib at 11pm the prev night, 
-# it would be counted towards the contrib for the day
-variables = {
+# Variables to check contributions so far today
+sixPMVariables = {
     "username": "D4rr4gh1",
     "from": datetime.datetime.now().replace(hour=0, minute=0,second=0, microsecond=0).isoformat(),
     "to": datetime.datetime.now().isoformat()
 }
 
-firstUpdateMessage = '''
+# Variables to check yesteradys contributions
+yesterdayVariables = {
+    "username": "D4rr4gh1",
+    "from": (datetime.datetime.now().replace(hour=0, minute=0,second=0, microsecond=0) - datetime.timedelta(days=1)).isoformat(),
+    "to": datetime.datetime.now().replace(hour=0, minute=0,second=0, microsecond=0).isoformat()
+}
+
+WarningMessage = '''
 You have not yet made a contribution for {date}. 
 
 If you do not make a contribution by 11.59pm, you will lose your {streak} day streak!
-'''.format(date = DATE, streak = 10)
+'''.format(date = DATE_TODAY, streak = 10)
 
-secondUpdateMessage = '''
+UpdateMessage = '''
 You made at least 1 contribution for {date}. You have now built a {streak} day streak. 
 
 Keep it up!
-'''.format(date = DATE, streak= 10)
+'''.format(date = DATE_YESTERDAY, streak= 10)
 
-EOSUpdateMessage = '''
+EOSMessage = '''
 You failed to make a contribution for {date}. Your streak has been reset. 
 
 Work hard to built a newer and bigger one!
-'''.format(date = DATE)
+'''.format(date = DATE_YESTERDAY)
 
-def get_contributions():
+# Make a request to the github GraphQL api, extract the data and return either 
+# the contribution count or an error
+def get_contributions(todayCheck):
     response = requests.post(
         "https://api.github.com/graphql",
         headers={"Authorization": f"Bearer {ACCESS_TOKEN}"},
-        json= {"query" : query, "variables" : variables}
+        json= {"query" : query, "variables" : sixPMVariables if todayCheck else yesterdayVariables}
     )
     response_data = response.json()
 
@@ -64,17 +70,19 @@ def get_contributions():
     else:
         try:
             total = response_data['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions']
-            print(response_data['data'])
             return total
         except KeyError as e:
             print(f"Missing expected key in response: {e}")
             exit()
 
+# Simply check if there has been atleast one contribution
 def check_contributions(count):
     if count > 0:
         return True
     return False
 
+# Creates and sends the email to the user. Uses the environment variables
+# and Gmail
 def send_email(body):
     message = MIMEText(body)
     message["Subject"] = "GitStreak"
@@ -86,46 +94,57 @@ def send_email(body):
         server.send_message(message)
     return
 
-def send_user_update(firstCheck, EOS = None):
-    if firstCheck:
-        send_email(firstUpdateMessage)
-        return
+# This decides which of the update messages will be sent.
+def send_user_update(type):
 
-    if EOS:
-        send_email(EOSUpdateMessage)
-        return
+    match type:
+        case "Warning":
+            send_email(WarningMessage)
+            return
+        case "Update":
+            send_email(UpdateMessage)
+            return
+        case "EOS":
+            send_email(EOSMessage)
+            return
+    print("No Matching Message Type")
+    exit()
+        
 
-    send_email(secondUpdateMessage)
-
+#TODO: Implement this
 def update_user_streak(incrementStreak):
     pass
 
-def mid_evening_check():
-    count = get_contributions()
+# Called when the script runs at 6pm. Checks if there are contributions for the day
+# if there are none, it sends a warning email.
+def six_pm_check():
+    count = get_contributions(True)
     if check_contributions(count):
-        send_user_update(True)
         return
-    else:
-        send_user_update(True)
+    
+    send_user_update("Warning")
 
-def end_of_day_check():
-    count = get_contributions()
+# Called when the script runs at 8am. If there have still been no contributions, 
+# end the streak and email. If there has been a contribution, update the streak and email user. 
+def yesterday_check():
+    count = get_contributions(False)
 
     if check_contributions(count):
         update_user_streak(True)
-        send_user_update(True)
+        send_user_update("Update")
         return
     
     update_user_streak(False)
-    send_user_update(False, True)
+    send_user_update("EOS")
     
 
 def main():
-    # Make a call to the GitHub GraphQL api to retrieve how many contributions were made in the last 24 hours
-    if datetime.datetime.now().time() <= datetime.time(23):
-        mid_evening_check()
+    # Decide which check to call based on the time in which the script has been called.
+    if datetime.datetime.now().time() <= datetime.time(17):
+        yesterday_check()
     else:
-        end_of_day_check()
+        six_pm_check()
+
 
 if __name__ == "__main__":
     main()

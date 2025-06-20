@@ -2,8 +2,8 @@ name: Run Python Script Twice Daily
 
 on:
   schedule:
+    - cron: "0 8 * * *"
     - cron: "0 18 * * *" # Every day at 6pm
-    - cron: "55 23 * * *"
   workflow_dispatch: # Manual trigger option
 
 jobs:
