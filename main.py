@@ -145,6 +145,7 @@ def main():
     #     yesterday_check()
     # else:
     #     six_pm_check()
+    os.environ["STREAK"] = 13
     print(f"Streak is {STREAK}")
 
 
