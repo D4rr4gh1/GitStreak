@@ -6,6 +6,9 @@ on:
     - cron: "0 18 * * *" # Every day at 6pm
   workflow_dispatch: # Manual trigger option
 
+permissions:
+  contents: write
+
 jobs:
   run-python:
     runs-on: ubuntu-latest
