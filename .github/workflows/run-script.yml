@@ -36,6 +36,7 @@ jobs:
           STREAK: ${{ vars.STREAK }}
         run: |
           python main.py
-      
-      - name: Test Update
-        run: echo "Streak is: $STREAK"
+
+      # - name: Test Update
+      #   run: |
+      #     echo "Streak is: $STREAK"
