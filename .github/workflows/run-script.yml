@@ -35,4 +35,7 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           STREAK: ${{ vars.STREAK }}
         run: |
-          output=$(python main.py)
+          python main.py
+      
+      - name: Test Update
+        run: echo "Streak is: $STREAK"
