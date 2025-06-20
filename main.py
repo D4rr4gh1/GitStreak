@@ -115,10 +115,10 @@ def send_user_update(type):
     print("No Matching Message Type")
     exit()
         
-
-#TODO: Implement this
 def update_user_streak(incrementStreak):
-    pass
+    with open("streak.txt", "w") as file:
+        file.write(str(STREAK + 1) if incrementStreak else "0")
+    return
 
 # Called when the script runs at 6pm. Checks if there are contributions for the day
 # if there are none, it sends a warning email.
@@ -145,13 +145,10 @@ def yesterday_check():
 
 def main():
     # Decide which check to call based on the time in which the script has been called.
-    # if datetime.datetime.now().time() <= datetime.time(17):
-    #     yesterday_check()
-    # else:
-    #     six_pm_check()
-    with open("streak.txt", "w") as file:
-        print("WRTITING")
-        file.write(str(13))
+    if datetime.datetime.now().time() <= datetime.time(17):
+        yesterday_check()
+    else:
+        six_pm_check()
     
     print(f"Streak is {STREAK}")
 
