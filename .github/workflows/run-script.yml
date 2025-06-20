@@ -35,4 +35,4 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           STREAK: ${{ vars.STREAK }}
         run: |
-          python main.py
+          output=$(python main.py)

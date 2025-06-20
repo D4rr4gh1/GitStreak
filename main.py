@@ -146,10 +146,9 @@ def main():
     #     yesterday_check()
     # else:
     #     six_pm_check()
-    with open(ENV_FILE, "r") as file:
-        print("Reading")
-        print(file.read())
-        # file.write("STREAK=13")
+    with open(ENV_FILE, "a") as file:
+        print("WRTITING")
+        file.write("STREAK=13")
     
     print(f"Streak is {STREAK}")
 
