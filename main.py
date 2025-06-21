@@ -51,7 +51,7 @@ UpdateMessage = '''
 You made at least 1 contribution for {date}. You have now built a {streak} day streak. 
 
 Keep it up!
-'''.format(date = DATE_YESTERDAY, streak= STREAK)
+'''.format(date = DATE_YESTERDAY, streak= STREAK+1)
 
 EOSMessage = '''
 You failed to make a contribution for {date}. Your streak has been reset. 
